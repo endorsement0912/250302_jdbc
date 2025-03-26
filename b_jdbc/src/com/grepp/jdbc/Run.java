@@ -1,5 +1,3 @@
-package com.grepp.jdbc;
-
 import com.grepp.jdbc.application.member.code.Grade;
 import com.grepp.jdbc.application.member.dao.MemberDao;
 import com.grepp.jdbc.application.member.dto.MemberDto;
