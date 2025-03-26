@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-// NOTE 02 DAO
+// NOTE 03 DAO
 // Data Access Object
 // 영속성 계층 : DBMS와 상호작용하는 Layer
 // presentation layer - domain layer - persistence layer(DAO)
@@ -20,15 +20,11 @@ public class MemberDao {
 
   private final JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
 
-  public Optional<MemberDto> insert(MemberDto dto){
-
+  public Optional<MemberDto> insert(Connection conn, MemberDto dto){
     String sql = "insert into member(user_id, password, email, grade, tell) "
         + "values(?,?,?,?,?)";
 
-    try(
-        Connection conn = jdbcTemplate.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql);
-    ) {
+    try( PreparedStatement stmt = conn.prepareStatement(sql);) {
 
       stmt.setString(1, dto.getUserId());
       stmt.setString(2, dto.getPassword());
@@ -53,20 +49,9 @@ public class MemberDao {
 
       stmt.setString(1, id);
       stmt.setString(2, password);
-      MemberDto dto = null;
 
       try(ResultSet rset = stmt.executeQuery()) {
-        while(rset.next()){
-          dto = new MemberDto();
-          dto.setUserId(rset.getString("user_id"));
-          dto.setPassword(rset.getString("password"));
-          dto.setEmail(rset.getString("email"));
-          dto.setTell(rset.getString("tell"));
-          dto.setLeave(rset.getBoolean("is_leave"));
-          dto.setGrade(Grade.valueOf(rset.getString("grade")));
-        }
-
-        return Optional.ofNullable(dto);
+        return getMemberDto(rset);
       }
 
     } catch (SQLException ex) {
@@ -104,5 +89,36 @@ public class MemberDao {
     } catch (SQLException ex) {
       throw new DataAccessException(ex.getMessage(), ex);
     }
+  }
+
+  public Optional<MemberDto> selectById(Connection conn, String userId) {
+    String sql = "select * from member where user_id = ?";
+
+    try(
+        PreparedStatement stmt = conn.prepareStatement(sql);
+    ) {
+      stmt.setString(1, userId);
+      try(ResultSet rset = stmt.executeQuery();){
+        return getMemberDto(rset);
+      }
+
+    } catch (SQLException ex) {
+      throw new DataAccessException(ex.getMessage(), ex);
+    }
+  }
+
+  private Optional<MemberDto> getMemberDto(ResultSet rset) throws SQLException {
+    MemberDto res = null;
+    while(rset.next()){
+      res = new MemberDto();
+      res.setUserId(rset.getString("user_id"));
+      res.setPassword(rset.getString("password"));
+      res.setEmail(rset.getString("email"));
+      res.setTell(rset.getString("tell"));
+      res.setLeave(rset.getBoolean("is_leave"));
+      res.setGrade(Grade.valueOf(rset.getString("grade")));
+    }
+
+    return Optional.ofNullable(res);
   }
 }
