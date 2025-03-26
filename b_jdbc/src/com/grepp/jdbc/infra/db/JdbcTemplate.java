@@ -1,8 +1,7 @@
 package com.grepp.jdbc.infra.db;
 
-
 import com.grepp.jdbc.infra.exception.DataAccessException;
-import com.grepp.jdbc.infra.exception.JdbcInititalizeException;
+import com.grepp.jdbc.infra.exception.JdbcInitializeException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,16 +12,19 @@ public class JdbcTemplate {
   private String user;
   private String password;
 
-  public static JdbcTemplate instance;
+  private static JdbcTemplate instance;
+
   public static JdbcTemplate getInstance(){
-    if(instance == null) throw new JdbcInititalizeException("JdbcTemplate not initialized, please call init()");
+    if(instance == null)
+      throw new JdbcInitializeException("JdbcTemplate not initialized, please call init()");
     return instance;
   }
 
-  public JdbcTemplate init(String url, String user, String password){
+  public static JdbcTemplate init(String url, String user, String password){
     if(instance == null){
       instance = new JdbcTemplate(url, user, password);
     }
+
     return instance;
   }
 
@@ -31,24 +33,14 @@ public class JdbcTemplate {
     this.user = user;
     this.password = password;
 
-    try {
+    try{
       Class.forName("com.mysql.cj.jdbc.Driver");
     } catch (ClassNotFoundException e) {
-      throw new JdbcInititalizeException(e.getMessage(), e);
+      throw new JdbcInitializeException(e.getMessage(), e);
     }
   }
 
-//  public Connection getConnection() {
-//    Connection conn = null;
-//
-//    try {
-//      conn = DriverManager.getConnection(url, user, password);
-//      return conn;
-//    } catch (SQLException e) {
-//      throw new RuntimeException(e);
-//    }
-//  }
-  public Connection getConnection() {
+  public Connection getConnection()  {
     Connection conn = null;
 
     try {
@@ -57,17 +49,19 @@ public class JdbcTemplate {
     } catch (SQLException e) {
       throw new DataAccessException(e.getMessage(), e);
     }
-
   }
-  public void close(Connection conn){
 
-
+  public void close(Connection conn) {
     try {
-      if(conn != null || conn.isClosed()) return;
+      if(conn == null || conn.isClosed()) return;
       conn.close();
     } catch (SQLException e) {
       throw new DataAccessException(e.getMessage(), e);
     }
   }
+
+
+
+
 
 }
