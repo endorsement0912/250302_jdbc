@@ -1,4 +1,4 @@
-package com.grepp.jdbc.app.member.Validator;
+package com.grepp.jdbc.app.member.validator;
 
 import com.grepp.jdbc.app.member.dao.MemberDao;
 import com.grepp.jdbc.app.member.dto.MemberDto;

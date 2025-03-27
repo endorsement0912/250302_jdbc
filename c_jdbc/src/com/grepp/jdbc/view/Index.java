@@ -5,6 +5,7 @@ import com.grepp.jdbc.app.member.auth.SecurityContext;
 import com.grepp.jdbc.app.member.code.Grade;
 import com.grepp.jdbc.infra.exception.DataAccessException;
 import com.grepp.jdbc.infra.exception.ValidException;
+import com.grepp.jdbc.view.book.BookMenu;
 import com.grepp.jdbc.view.member.MemberMenu;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ public class Index {
 
   private final Scanner sc = new Scanner(System.in);
   private final MemberMenu memberMenu = new MemberMenu();
+  private final BookMenu bookMenu = new BookMenu();
 
   public void menu() {
     while (true) {
@@ -44,6 +46,7 @@ public class Index {
             memberMenu.menu();
             break;
           case 2:
+            bookMenu.menu();
             break;
           case 3:
             break;

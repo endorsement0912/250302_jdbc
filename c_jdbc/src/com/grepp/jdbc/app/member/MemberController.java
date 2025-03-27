@@ -9,14 +9,14 @@ package com.grepp.jdbc.app.member;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.grepp.jdbc.app.member.Validator.LeaveFormValidator;
-import com.grepp.jdbc.app.member.Validator.SignupFormValidator;
 import com.grepp.jdbc.app.member.dto.form.LeaveForm;
 import com.grepp.jdbc.app.member.dto.form.ModifyForm;
 import com.grepp.jdbc.app.member.dto.form.SignupForm;
+import com.grepp.jdbc.app.member.validator.LeaveFormValidator;
 import com.grepp.jdbc.app.member.validator.ModifyFormValidator;
+import com.grepp.jdbc.app.member.validator.SignupFormValidator;
+import com.grepp.jdbc.infra.json.GsonProvider;
 import java.util.Map;
-
 
 // 1. 사용자의 입력값을 어플리케이션 내에서 사용하기 적합한 형태로 파싱
 // 2. 요청에 대해 인가 처리를 하는 외벽역할
@@ -28,7 +28,7 @@ public class MemberController {
   private final LeaveFormValidator leaveValidator = new LeaveFormValidator();
 
   private final MemberService memberService = new MemberService();
-  private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+  private final Gson gson = GsonProvider.get();
 
   public String signup(SignupForm form) {
     signupValidator.validate(form);
@@ -48,7 +48,6 @@ public class MemberController {
     form.setUserId(userId);
     form.setPassword(password);
     modifyValidator.validate(form);
-
     return gson.toJson(memberService.updatePassword(form.toDto()));
   }
 
@@ -57,12 +56,10 @@ public class MemberController {
     form.setUserId(userId);
     leaveValidator.validate(form);
     return gson.toJson(memberService.deleteById(userId));
-
   }
 
   public String login(String userId, String password) {
     memberService.authenticate(userId, password);
     return gson.toJson(Map.of("result", "success"));
-
   }
 }

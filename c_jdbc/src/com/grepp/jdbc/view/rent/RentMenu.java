@@ -1,6 +1,5 @@
 package com.grepp.jdbc.view.rent;
 
-import com.grepp.jdbc.app.book.BookController;
 import com.grepp.jdbc.app.rent.RentController;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class RentMenu {
                         System.out.print(" * user_id : ");
                         String userId = sc.next();
                         
-                        String books = bookController.findAllBooks();
+                        String books = bookController.getAll();
                         List<String> bkIdxs = new ArrayList<>();
                         
                         while (true) {

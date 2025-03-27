@@ -1,7 +1,6 @@
 package com.grepp.jdbc.view.book;
 
-import com.grepp.jdbc.app.book.BookController;
-import com.grepp.jdbc.app.book.form.RegistForm;
+import com.grepp.jdbc.app.book.dto.form.RegistForm;
 import java.util.Scanner;
 
 public class BookMenu {
@@ -21,8 +20,9 @@ public class BookMenu {
             System.out.print("\n 입력 : ");
             
             switch (sc.nextInt()) {
-                // todo : 모든 도서 정보를 출력합니다.
-                case 1: System.out.println(bookController.findAllBooks());
+                // todo : 모든 도서 정보를 출력합니다. -> red_date 구현해야함.
+                case 1:
+                    System.out.println(bookController.getAll());
                     break;
                 // todo : 도서 등록 후 등록한 도서의 정보를 출력합니다.
                 // 도서명, isbn, 작가, 카테고리는 공백일 수 없습니다.
