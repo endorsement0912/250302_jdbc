@@ -1,5 +1,7 @@
 package com.grepp.jdbc.app.book.dto.form;
 
+import com.grepp.jdbc.app.book.dto.BookDto;
+
 public class RegistForm {
     private String isbn;
     private String category;
@@ -18,6 +20,16 @@ public class RegistForm {
             ", info='" + info + '\'' +
             ", amount='" + amount + '\'' +
             '}';
+    }
+
+    public BookDto toDto(){
+        BookDto bookDto = new BookDto();
+        bookDto.setIsbn(isbn);
+        bookDto.setTitle(title);
+        bookDto.setAuthor(author);
+        bookDto.setInfo(info);
+        bookDto.setAmount(amount);
+        return bookDto;
     }
 
     public String getIsbn() {
